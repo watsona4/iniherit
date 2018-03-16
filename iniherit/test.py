@@ -8,6 +8,7 @@
 
 import unittest
 import io
+import os
 import textwrap
 
 import six
@@ -103,7 +104,7 @@ class TestIniherit(unittest.TestCase):
   #----------------------------------------------------------------------------
   def test_iniherit_relativePath(self):
     files = {k: textwrap.dedent(v) for k, v in {
-      'dir/base.ini' : '[section]\nkw1 = base-kw1\n',
+      os.path.join('dir', 'base.ini') : '[section]\nkw1 = base-kw1\n',
       'dir/mid.ini'  : '[DEFAULT]\n%inherit = base.ini\n[section]\nkw2 = mid-kw2\n',
       'extend.ini'   : '[DEFAULT]\n%inherit = dir/mid.ini\n[section]\nkw3 = extend-kw3\n',
     }.items()}
