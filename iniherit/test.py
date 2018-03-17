@@ -13,6 +13,11 @@ import textwrap
 
 import six
 
+if six.PY2:
+  readfp = 'readfp'
+else:
+  readfp = 'read_file'
+
 from iniherit.parser import Loader, ConfigParser, SafeConfigParser
 
 #------------------------------------------------------------------------------
@@ -232,14 +237,14 @@ class TestIniherit(unittest.TestCase):
       # first test that inheritance doesn't work
       parser = CP.ConfigParser()
       parser.loader = loader
-      parser.readfp(loader.load('config.ini'))
+      getattr(parser, readfp)(loader.load('config.ini'))
       with self.assertRaises(CP.NoOptionError):
         parser.get('DEFAULT', 'kw')
       # then monkey-patch and test that inheritance does work
       install_globally()
       parser = CP.ConfigParser()
       parser.loader = loader
-      parser.readfp(loader.load('config.ini'))
+      getattr(parser, readfp)(loader.load('config.ini'))
       self.assertEqual(parser.get('DEFAULT', 'kw'), 'base-kw')
       uninstall_globally()
 

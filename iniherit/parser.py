@@ -49,6 +49,11 @@ if six.PY3:
     _real_ConfigParser._interpolate = _interpolate
     _real_SafeConfigParser._interpolate = _interpolate
 
+if six.PY2:
+  readfp = 'readfp'
+else:
+  readfp = 'read_file'
+
 #------------------------------------------------------------------------------
 class Loader(object):
   def load(self, name, encoding=None):
@@ -122,7 +127,7 @@ class IniheritMixin(object):
   def _readRecursive(self, fp, fpname, encoding=None):
     ret = self._makeParser()
     src = self._makeParser()
-    src.readfp(fp, fpname)
+    getattr(src, readfp)(fp, fpname)
     dirname = os.path.dirname(fpname)
     if src.has_option(self.IM_DEFAULTSECT, self.IM_INHERITTAG):
       inilist = src.get(self.IM_DEFAULTSECT, self.IM_INHERITTAG)

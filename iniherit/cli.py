@@ -13,6 +13,11 @@ import iniherit, iniherit.parser
 
 log = logging.getLogger(__name__)
 
+if six.PY2:
+  readfp = 'readfp'
+else:
+  readfp = 'read_file'
+
 # todo: reading from 'STDIN' and watching results in an unexpected
 #       behavior: if reading from a real pipe, it comes up as empty the
 #       non-first time. if reading from tty, you need to re-type the
@@ -45,7 +50,7 @@ def flatten(input, output, loader=None):
   if isstr(input):
     cfg.read(input)
   else:
-    cfg.readfp(input)
+    getattr(cfg, readfp)(input)
   out = iniherit.parser.CP.RawConfigParser()
   out.optionxform = str
   cfg._apply(cfg, out)
