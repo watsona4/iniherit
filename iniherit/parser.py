@@ -38,6 +38,17 @@ _real_SafeConfigParser = CP.SafeConfigParser
 
 DEFAULT_INHERITTAG = '%inherit'
 
+if six.PY3:
+    def _interpolate(self, section, option, rawval, vars):
+      try:
+        return self._interpolation.before_get(self, section, option, rawval, vars)
+      except CP.InterpolationSyntaxError:
+        if option == '%inherit':
+          return rawval
+    _real_RawConfigParser._interpolate = _interpolate
+    _real_ConfigParser._interpolate = _interpolate
+    _real_SafeConfigParser._interpolate = _interpolate
+
 #------------------------------------------------------------------------------
 class Loader(object):
   def load(self, name, encoding=None):
